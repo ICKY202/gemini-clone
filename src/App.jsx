@@ -1,15 +1,18 @@
 import './App.css'
 import Sidebar from './components/sidebar/Sidebar';
 import Main from './components/main/Main';
+import GeminiContextProvider from './context/GeminiProvider';
 
 
 function App() {
 
   return (
-    <>
-      <Sidebar/>
-      <Main/>
-    </>
+      <div style={{display: 'flex'}}>
+        <GeminiContextProvider>
+          <Sidebar/>
+          <Main/>
+        </GeminiContextProvider>
+      </div>
   )
 }
 
