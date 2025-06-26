@@ -3,7 +3,7 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: "AIzaSyD95woDERgV_DIl0BuxyEc_ccaQny9_Ewc"});
+const ai = new GoogleGenAI({ apiKey: localStorage.getItem("apiKey")});
 
 async function main(input) {
     console.log(input);
