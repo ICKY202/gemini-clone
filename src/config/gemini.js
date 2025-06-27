@@ -11,7 +11,6 @@ async function main(input) {
     model: "gemini-2.5-flash",
     contents: `${input}`,
   });
-  console.log(response.text);
   return response.text;
 }
 

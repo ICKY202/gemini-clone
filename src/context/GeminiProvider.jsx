@@ -7,9 +7,9 @@ const Provider = context.Provider;
 
 export default function GeminiContextProvider({children}) {
     const [input, setInput] = useState('');
-    const [recentPrompt, setRecentPrompt] = useState([]);
+    const [recentPrompt, setRecentPrompt] = useState('');
     const [loading, setLoading] = useState(false);
-    const [prevPrompts, setPrevPrompts] = useState('');
+    const [prevPrompts, setPrevPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [resultData, setResultData] = useState('');
 
@@ -18,15 +18,24 @@ export default function GeminiContextProvider({children}) {
             setResultData((prev) => prev + nextword);
         }, 75 * i);
     }
-
-    async function onSent() {
+    const newChat = () => {
+        setLoading(false);
+        setShowResult(false);
+    }
+    async function onSent(prompt) {
         setResultData('');
         setLoading(true);
         setShowResult(true);
-        setRecentPrompt(input);
-        const response = await main(input);
+        let response;
+        if(prompt !== undefined) {
+            response = await main(prompt);
+        }else {
+            setRecentPrompt(input);
+            setPrevPrompts((prev) => [...prev, input]);
+            response = await main(input);
+        }
         let responseArray = response.split("**");
-        let newResponse;
+        let newResponse = "";
         for(let i=0; i<responseArray.length; i++) {
             if(i === 0 || i % 2 !== 1) {
                 newResponse += responseArray[i];
@@ -58,7 +67,8 @@ export default function GeminiContextProvider({children}) {
         setShowResult,
         setPrevPrompts,
         setResultData,
-        onSent
+        onSent, 
+        newChat
     }
 
     return <Provider value={contextValue}>{children}</Provider>
