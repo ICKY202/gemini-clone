@@ -11,7 +11,7 @@ function Sidebar() {
                 <img onClick={() => setExtended(!extended)} className="menu" src={assets.menu_icon} alt="" />
                 <div className='new-chat'>
                     <img src={assets.plus_icon} alt="" />
-                    {extended ?? <p>New chat</p>}
+                    {extended && <p>New chat</p>}
                 </div>
                 {extended && <div className='recent'>
                     <div className='recent-title'>Recents</div>

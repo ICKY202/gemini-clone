@@ -7,30 +7,58 @@ const Provider = context.Provider;
 
 export default function GeminiContextProvider({children}) {
     const [input, setInput] = useState('');
-    const [recents, setRecents] = useState([]);
+    const [recentPrompt, setRecentPrompt] = useState([]);
     const [loading, setLoading] = useState(false);
     const [prevPrompts, setPrevPrompts] = useState('');
     const [showResult, setShowResult] = useState(false);
     const [resultData, setResultData] = useState('');
 
-    async function onSent(prompt) {
-        await main(prompt);
+    const delayPara = (i, nextword) => {
+        setTimeout(() => {
+            setResultData((prev) => prev + nextword);
+        }, 75 * i);
     }
-    onSent("What is react");
+
+    async function onSent() {
+        setResultData('');
+        setLoading(true);
+        setShowResult(true);
+        setRecentPrompt(input);
+        const response = await main(input);
+        let responseArray = response.split("**");
+        let newResponse;
+        for(let i=0; i<responseArray.length; i++) {
+            if(i === 0 || i % 2 !== 1) {
+                newResponse += responseArray[i];
+            }else {
+                newResponse += "<b>" + responseArray[i] + "</b>"
+            }
+        }
+        let newResponse2 = newResponse.split("*").join("<br>");
+        let newResponseArray = newResponse2.split(' ');
+        for(let i=0; i<newResponseArray.length; i++) {
+            const nextWord = newResponseArray[i];
+            delayPara(i, nextWord+" ");
+        }
+        // setResultData(newResponse2);
+        setLoading(false);
+        setInput('');
+    }
 
     const contextValue = {
         input,
-        recents,
+        recentPrompt,
         loading,
         prevPrompts,
         showResult,
         resultData,
-        setRecents,
+        setRecentPrompt,
         setInput,
         setLoading,
         setShowResult,
         setPrevPrompts,
-        setResultData
+        setResultData,
+        onSent
     }
 
     return <Provider value={contextValue}>{children}</Provider>

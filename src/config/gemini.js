@@ -12,6 +12,7 @@ async function main(input) {
     contents: `${input}`,
   });
   console.log(response.text);
+  return response.text;
 }
 
 export default main;
